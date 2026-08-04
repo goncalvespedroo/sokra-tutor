@@ -41,7 +41,7 @@ MVP em desenvolvimento
 
 - [x] Landing page
 - [x] Lista de espera
-- [x] Estrutura inicial do monorepo
+- [ ] Estrutura inicial do monorepo
 - [ ] Autenticação
 - [ ] Perfil do estudante
 - [ ] Fluxo socrático inicial
@@ -49,7 +49,14 @@ MVP em desenvolvimento
 
 ## Arquitetura
 
-Breve explicação da divisão entre frontend, backend, banco de dados e LLM.
+A arquitetura do MVP está em definição. A proposta inicial separa:
+
+- interface web em Next.js e TypeScript;
+- serviços de IA e processamento em Python;
+- API para autenticação, sessões e memória;
+- banco de dados para usuários e histórico de aprendizagem.
+
+As decisões serão registradas conforme forem validadas durante o desenvolvimento.
 
 ## Decisões técnicas
 
