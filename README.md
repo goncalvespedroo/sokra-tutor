@@ -2,6 +2,14 @@
 
 > Aprender começa com uma boa pergunta.
 
+<p alig="center"> 
+    <img
+        src="./docs/assets/sokra-landing-preview.png"
+        alt="Página inicial do Sokra, tutor de estudos baseado no método socrático"
+        width="100%"
+    >
+</p>
+
 O Sokra é um tutor de estudos baseado no método socrático.
 Em vez de entregar respostas imediatamente, ele ajuda o estudante
 a desenvolver o próprio raciocínio por meio de perguntas orientadas.
