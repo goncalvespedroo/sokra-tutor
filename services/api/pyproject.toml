@@ -11,5 +11,25 @@ dependencies = [
 dev = [
     "httpx>=0.28.1",
     "httpx2>=2.10.0",
+    "pre-commit>=4.6.2",
     "pytest>=9.1.1",
+    "ruff>=0.16.2",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+]
+
+[tool.pyright]
+include =["app", "tests"]
+pythonVersion ="3.14"
+typeCheckingMode = "basic"
+venvPath = "."
+venv = ".venv"
