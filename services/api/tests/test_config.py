@@ -7,20 +7,24 @@ from app.core.config import Settings
 
 def test_settings_defaults_to_development_environment(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     monkeypatch.delenv("SOKRA_ENVIRONMENT", raising=False)
+    monkeypatch.chdir(tmp_path)
 
-    settings = Settings(_env_file=None)
+    settings = Settings()
 
     assert settings.environment == "development"
 
 
 def test_settings_reads_environment_variable(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     monkeypatch.setenv("SOKRA_ENVIRONMENT", "production")
+    monkeypatch.chdir(tmp_path)
 
-    settings = Settings(_env_file=None)
+    settings = Settings()
 
     assert settings.environment == "production"
 
