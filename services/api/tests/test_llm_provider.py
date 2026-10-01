@@ -1,6 +1,7 @@
 import asyncio
 
 import pytest
+
 from app.ai import (
     EvaluationResult,
     FakeLLMProvider,
@@ -38,6 +39,7 @@ def test_evaluate_returns_configured_result(is_correct: bool) -> None:
 
     actual = asyncio.run(evaluate())
 
+    assert actual is result
     assert actual.is_correct is is_correct
     assert actual.feedback == result.feedback
 
@@ -55,15 +57,40 @@ def test_embed_returns_configured_vector() -> None:
 @pytest.mark.parametrize(
     "error_type", [ProviderError, TransientProviderError, PermanentProviderError]
 )
-def test_fake_raises_configured_internal_error(error_type: type[ProviderError]) -> None:
+@pytest.mark.parametrize("operation", ["stream", "evaluate", "embed"])
+def test_fake_raises_configured_internal_error(
+    error_type: type[ProviderError], operation: str
+) -> None:
     error = error_type("Falha configurada")
     provider: LLMProvider = FakeLLMProvider(error=error)
 
-    async def consume_stream() -> None:
-        async for _ in provider.stream("Uma pergunta"):
-            pass
+    async def invoke_provider() -> None:
+        if operation == "stream":
+            async for _ in provider.stream("Uma pergunta"):
+                pytest.fail("The stream must raise before yielding a chunk")
+        elif operation == "evaluate":
+            await provider.evaluate("Uma resposta")
+        else:
+            await provider.embed("Um texto")
 
     with pytest.raises(ProviderError) as caught:
-        asyncio.run(consume_stream())
+        asyncio.run(invoke_provider())
 
     assert caught.value is error
+
+
+def test_defaults_are_usable_and_independent() -> None:
+    first = FakeLLMProvider()
+    second = FakeLLMProvider()
+    first.chunks.append("chunk")
+    first.embedding.append(1.0)
+    first.evaluation.feedback = "Alterado"
+
+    async def check_defaults() -> None:
+        assert [chunk async for chunk in second.stream("prompt")] == []
+        assert await second.embed("text") == []
+        result = await second.evaluate("response")
+        assert result.is_correct is True
+        assert result.feedback == "Feedback configurado"
+
+    asyncio.run(check_defaults())
