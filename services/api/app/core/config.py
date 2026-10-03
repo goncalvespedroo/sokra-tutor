@@ -6,6 +6,13 @@ class Settings(BaseSettings):
 
     environment: str = "development"
 
+    openrouter_api_key: str | None = None
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_chat_model: str | None = None
+    openrouter_embedding_model: str | None = None
+    openrouter_timeout_seconds: float = 30.0
+    openrouter_retries: int = 2  # Extra attempts after the initial request.
+
     model_config = SettingsConfigDict(
         env_prefix="SOKRA_",
         env_file=".env",
